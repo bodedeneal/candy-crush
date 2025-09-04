@@ -1,34 +1,49 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #ffebf0;
+  background: #fce4ec;
   text-align: center;
-  margin: 0;
   padding: 20px;
+  margin: 0;
 }
 
 h1 {
-  color: #d6336c;
+  color: #d81b60;
 }
 
 .score-board {
   margin-bottom: 20px;
-  font-size: 18px;
+  font-size: 1.2rem;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(8, 60px);
   grid-template-rows: repeat(8, 60px);
-  gap: 2px;
+  gap: 3px;
   justify-content: center;
-  margin: 0 auto;
 }
 
 .square {
   width: 60px;
   height: 60px;
   border-radius: 10px;
-  cursor: pointer;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
+}
+
+.square.striped {
+  /* Example placeholder style */
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,0.8);
+}
+
+.square.wrapped {
+  /* Example placeholder style */
+  transform: rotate(0.05turn);
+}
+
+.square.color-bomb {
+  /* Example placeholder style (rainbow sprinkles effect) */
+  background-color: #333;
+  border-radius: 50%;
 }
