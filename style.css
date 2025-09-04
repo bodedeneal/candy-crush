@@ -1,7 +1,7 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  text-align: center;
   background: #fdf6f0;
+  text-align: center;
   color: #333;
 }
 
@@ -11,33 +11,34 @@ h1 {
 }
 
 .game-info {
-  margin: 10px 0;
   font-size: 1.2em;
+  margin-bottom: 10px;
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(9, 50px);
-  grid-template-rows: repeat(9, 50px);
+  grid-template-columns: repeat(9, 60px);
+  grid-template-rows: repeat(9, 60px);
   gap: 4px;
   justify-content: center;
   margin: 20px auto;
 }
 
 .cell {
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #fff;
   border-radius: 8px;
   border: 1px solid #ccc;
-  cursor: pointer;
-  transition: transform 0.2s;
+  cursor: grab;
+  user-select: none;
 }
 
-.cell:hover {
-  transform: scale(1.1);
+.tutorial {
+  margin-top: 20px;
+  font-size: 1em;
 }
