@@ -24,20 +24,41 @@ function createBoard() {
   }
 }
 
-function dragEvents() {
-  let dragged, replaced;
+let draggedCandy = null;
+let replacedCandy = null;
 
-  candies.forEach(cell => {
-    cell.addEventListener("dragstart", () => {
-      dragged = cell;
+function dragEvents() {
+  candies.forEach(candy => {
+    candy.addEventListener("dragstart", () => {
+      draggedCandy = candy;
     });
 
-    cell.addEventListener("dragover", e => e.preventDefault());
+    candy.addEventListener("dragover", e => e.preventDefault());
 
-    cell.addEventListener("drop", () => {
-      replaced = cell;
-      swapCandies(dragged, replaced);
-      checkMatches();
+    candy.addEventListener("drop", () => {
+      replacedCandy = candy;
+    });
+
+    candy.addEventListener("dragend", () => {
+      const draggedId = parseInt(draggedCandy.getAttribute("data-id"));
+      const replacedId = parseInt(replacedCandy.getAttribute("data-id"));
+
+      const validMoves = [
+        draggedId - 1,
+        draggedId + 1,
+        draggedId - width,
+        draggedId + width
+      ];
+
+      if (validMoves.includes(replacedId)) {
+        swapCandies(draggedCandy, replacedCandy);
+        if (checkMatches()) {
+          moves--;
+          movesDisplay.textContent = moves;
+        } else {
+          swapCandies(draggedCandy, replacedCandy); // undo if no match
+        }
+      }
     });
   });
 }
@@ -46,32 +67,51 @@ function swapCandies(a, b) {
   const temp = a.textContent;
   a.textContent = b.textContent;
   b.textContent = temp;
-  moves--;
-  movesDisplay.textContent = moves;
 }
 
 function checkMatches() {
-  for (let i = 0; i < candies.length - 2; i++) {
-    let rowMatch = [i, i + 1, i + 2];
-    let colMatch = [i, i + width, i + width * 2];
+  let matchFound = false;
 
-    if (rowMatch.every(idx => candies[idx] && candies[idx].textContent === candies[i].textContent)) {
-      rowMatch.forEach(idx => candies[idx].textContent = getRandomCandy());
+  // Horizontal matches
+  for (let i = 0; i < width * width; i++) {
+    if (i % width > width - 3) continue;
+    let row = [i, i + 1, i + 2];
+    let candy = candies[i].textContent;
+    if (row.every(idx => candies[idx].textContent === candy)) {
+      row.forEach(idx => candies[idx].textContent = "");
       score += 300;
+      matchFound = true;
     }
+  }
 
-    if (colMatch.every(idx => candies[idx] && candies[idx].textContent === candies[i].textContent)) {
-      colMatch.forEach(idx => candies[idx].textContent = getRandomCandy());
+  // Vertical matches
+  for (let i = 0; i < width * (width - 2); i++) {
+    let col = [i, i + width, i + width * 2];
+    let candy = candies[i].textContent;
+    if (col.every(idx => candies[idx].textContent === candy)) {
+      col.forEach(idx => candies[idx].textContent = "");
       score += 300;
+      matchFound = true;
     }
   }
 
   scoreDisplay.textContent = score;
+  dropCandies();
+  return matchFound;
+}
 
-  if (score >= 60000) {
-    alert("🎉 You win!");
-  } else if (moves <= 0) {
-    alert("😢 Out of moves!");
+function dropCandies() {
+  for (let i = width * (width - 1) - 1; i >= 0; i--) {
+    if (candies[i + width] && candies[i + width].textContent === "") {
+      candies[i + width].textContent = candies[i].textContent;
+      candies[i].textContent = "";
+    }
+  }
+
+  for (let i = 0; i < width; i++) {
+    if (candies[i].textContent === "") {
+      candies[i].textContent = getRandomCandy();
+    }
   }
 }
 
